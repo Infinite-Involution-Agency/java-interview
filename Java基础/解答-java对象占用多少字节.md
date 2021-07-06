@@ -1,8 +1,8 @@
-## Java 对象占用多少字节
+# Java 对象占用多少字节
 
-### 一、预备知识：
+## 一、预备知识：
 
-#### Java 对象模型
+### Java 对象模型
 
 HotSpot JVM 使用名为 oops (Ordinary Object Pointers)  的数据结构来表示对象，对象在内存中分3部分：
 
@@ -14,11 +14,14 @@ HotSpot JVM 使用名为 oops (Ordinary Object Pointers)  的数据结构来表�
 - Instance Data: 实例数据
 - Alignment Padding: 对象对齐填充。Java 对象的大小默认是按照 8 字节对齐，也就是说 Java 对象的大小必须是 8 字节的倍数。若是算到最后不够 8 字节的话，那么就会进行对齐填充。
 
-#### 指针压缩
 
-JVM 为了节省内存，如果 heap size 小于 32GB，JVM会自动开启指针压缩。大于32GB会关闭指针压缩。可以用 *-XX:-UseCompressedOops* tuning flag 强行开启指针压缩
 
-#### 基本类型占用空间
+### 指针压缩
+JVM 为了节省内存，如果 heap size 小于 32GB，JVM会自动开启指针压缩。大于32GB会关闭指针压缩。可以用 *-XX:-UseCompressedOops* tuning flag 强行开启指针压缩。
+
+
+
+### [基本类型占用空间]()
 
 | 类型              | 占用空间(byte)              |
 | ----------------- | --------------------------- |
@@ -32,10 +35,14 @@ JVM 为了节省内存，如果 heap size 小于 32GB，JVM会自动开启指针
 | double            | 8                           |
 | object references | 4，如果未开启指针压缩则为 8 |
 
-#### GC的一些基本知识
+
+
+### GC 的基本知识
 
 - 程序中存在一些实例, 称作GC root, 它们不会被GC回收, 常见的例如静态变量, 线程等
 - 被GC root直接或间接引用的实例会被标记为in use, 它们也不会被GC回收
+
+
 
 
 ## 二、分析对象大小
@@ -85,9 +92,9 @@ public class Course {
 }
 ```
 
-大小大小
 
-#### Shallow Size
+
+### Shallow Size
 
 计算公式：**对象头 + 实例数据 + 对齐填充字节**
 
@@ -104,14 +111,6 @@ public class ObjectsSizeMain {
 }
 ```
 
-实例数据：Course 类只有一个 String 类的类属性 name ，所以占用 4 字节。
-
-对象头：Couse 类非数组对象，所以占用 12 字节
-
-对齐填充字节： 由于对象头+实例数据=16字节，所以不需要填充，填充字节为 0。
-
-**所以 Course 类实例 shallow size 是16字节。**
-
 实际输出：
 
 ```java
@@ -126,9 +125,18 @@ Instance size: 16 bytes
 Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 ```
 
+实例数据：Course 类只有一个 String 类的类属性 name ，所以占用 4 字节。
+
+对象头：Couse 类非数组对象，所以占用 12 字节
+
+对齐填充字节： 由于对象头+实例数据=16字节，所以不需要填充，填充字节为 0。
+
+**所以 Course 类实例 shallow size 是16字节。**
 
 
-#### Ratained Size
+
+
+### Ratained Size
 
 计算公式：**对象自身的 Shallow Size + 引用对象的 Shallow Size**
 
@@ -172,7 +180,7 @@ Space losses: 0 bytes internal + 3 bytes external = 3 bytes total
 
 
 
-#### Deep Size
+### Deep Size
 
 代码：
 
